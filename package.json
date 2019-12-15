@@ -24,6 +24,8 @@
         "firebase": "^7.5.1",
         "rxjs": "~6.4.0",
         "sweetalert2": "^9.4.3",
+        "mapbox-gl": "^1.6.0",
+        "ngx-socket-io": "^3.0.1",
         "tslib": "^1.10.0",
         "zone.js": "~0.9.1"
     },
@@ -35,6 +37,7 @@
         "@types/node": "~8.9.4",
         "@types/jasmine": "~3.3.8",
         "@types/jasminewd2": "~2.0.3",
+        "@types/mapbox-gl": "^1.5.2",
         "codelyzer": "^5.0.0",
         "jasmine-core": "~3.4.0",
         "jasmine-spec-reporter": "~4.2.1",

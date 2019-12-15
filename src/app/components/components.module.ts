@@ -6,6 +6,7 @@ import { GraficoBarraHorizontalComponent } from './grafico-barra-horizontal/graf
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { GotyComponent } from '../pages/goty/goty.component';
 
 
 @NgModule({

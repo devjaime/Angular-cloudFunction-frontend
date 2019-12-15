@@ -1,8 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { GameService } from '../../services/game.service';
-import { Game } from '../../interfaces/interfaces';
-import Swal from 'sweetalert2';
-
 import { WebsocketService } from '../../services/websocket.service';
 import { locationService } from '../../services/location.service';
 import { Lugar, Geolocation } from '../../interfaces/interfaces';
@@ -14,34 +10,26 @@ interface RespMarcadores {
 }
 
 @Component({
-  selector: 'app-goty',
-  templateUrl: './goty.component.html',
-  styleUrls: ['./goty.component.css']
+  selector: 'app-mapa',
+  templateUrl: './mapa.component.html',
+  styleUrls: ['./mapa.component.scss']
 })
-export class GotyComponent implements OnInit {
-  juegos: Game[]= [];
+export class MapaComponent implements OnInit {
+
   mapa: mapboxgl.Map;
   // lugares: lugar[] = [];
   lugares: {[key: string]: Lugar} = {};
   markersMapbox: {[id: string]: mapboxgl.Marker} = {};
-
-  constructor(private gameService: GameService,
-              private http: HttpClient,
+  constructor(private http: HttpClient,
               private wsService: WebsocketService,
-              private wsLocation: locationService
-              ) { }
+              private wsLocation: locationService) {
+              }
 
   ngOnInit() {
-    this.gameService.getNominados()
-    .subscribe(juegos => {
-      console.log(juegos);
-      this.juegos = juegos;
-    });
 
-    // mapa
     this.http.get<RespMarcadores>('https://socket-chile.herokuapp.com/mapa')
     .subscribe(lugares => {
-       console.log('crear mapa',lugares);
+      // console.log(lugares);
       this.lugares = lugares;
 
       this.crearMapa();
@@ -133,14 +121,14 @@ export class GotyComponent implements OnInit {
 
   }
 
-  crearMarcador(name: string) {
+  crearMarcador() {
     this.wsLocation.getPosition().then(GPS => {
       console.log(`GPS al crear mapa: ${GPS.lng} ${GPS.lat}`);
       const customMarker: Lugar = {
         id: new Date().toISOString(),
         lng: GPS.lng,
         lat: GPS.lat,
-        nombre: name,
+        nombre: 'Sin nombre',
         color: '#' + Math.floor(Math.random() * 16777215).toString(16)
       }
       
@@ -149,22 +137,6 @@ export class GotyComponent implements OnInit {
       // emitir marcador-nuevo
       this.wsService.emit('marcador-nuevo', customMarker);
   });
-  }
-
-  votarJuego( juego: Game ) {
-    
-    this.gameService.votarJuego( juego.id )
-    .subscribe( (resp: {ok: boolean, mensaje: string }) => {
-
-        if ( resp.ok ) {
-          Swal.fire('Gracias',resp.mensaje, 'success' );
-          this.crearMarcador(resp.mensaje);
-        } else {
-          Swal.fire('Oops',resp.mensaje, 'error' );
-        }
-
-      });
-
   }
 
 }
